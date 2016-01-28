@@ -1,4 +1,8 @@
 ;; primitives.scm
+;;
+;; Interface:
+;; (primitive-procedure-names)
+;; (primitive-procedure-objects)
 
 
 (define primitive-procedures

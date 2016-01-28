@@ -3,40 +3,19 @@
 ;; Meta-circular evaluater: evaluator written by the evaluated language.
 ;;
 ;; main.scm:
-;; - I/O component
-;; - main loop
+;; Main loop
 
 (load "environment.scm")
-
-;; I/O part
-
-(define input-prompt ";; Meta-circular-evaluater input:")
-(define output-prompt ";; Result:")
-
-;; input
-
-(define (prompt-for-input string)
-  (newline)
-  (display string)
-  (newline))
-
-;; output
-
-(define (announce-output string)
-  (newline)
-  (display string)
-  (newline))
-
-(define (user-print obj)
-  (if (my-compound-procedure? obj)
-      (display (list 'compound-procedure
-		     (procedure-parameters obj)
-		     (procedure-body obj)))
-      (display obj)))
+(load "io.scm")
+(load "procedure.scm")
 
 
+;; Initialize environment
 
-;; main loop
+(define the-global-environment (setup-environment))
+
+
+;; Main loop
 
 (define (driver-loop)
   (prompt-for-input input-prompt)

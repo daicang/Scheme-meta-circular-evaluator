@@ -1,7 +1,15 @@
 ;; environment.scm
 ;;
+;; Interface:
+;; the-empty-environment
+;; (enclosing-environment env)
+;; (first-frame env)
+;; (frame-variables f) (frame-values f)
+;; (define-variable! var val env)
+;; (setup-environment)
+;;
 ;; Environment:
-;; ((frame1) (frame2) ...)
+;; ((first frame) (frame2) ...)
 ;;
 ;; Frame:
 ;; ((variable1 variable2) (value1 value2))
@@ -15,7 +23,6 @@
 
 (define the-empty-environment '())
 
-;; Newest frame first
 (define (first-frame env) (car env))
 
 (define (enclosing-environment env) (cdr env))
@@ -42,10 +49,15 @@
 	  (error "Too many arguments -- extend-environment" vars vals)
 	  (error "Too few  arguments -- extent-environment" vals vals))))
 
-;; TODO
 (define (define-variable! var val env)
   (let ((frame (first-frame env)))
-    ()))
+    (define (scan vars vals)
+      (cond ((null? vars) (add-binding-to-frame! var val frame))
+	    ((eq? (car vars) var)
+	     (set-car! vals val))
+	    (else
+	     (scan (cdr vars) (cdr vals)))))
+    (scan (frame-variables frame) (frame-values frame))))
 
 (define (setup-environment)
   (let ((initial-env (extend-environment (primitive-procedure-names)
