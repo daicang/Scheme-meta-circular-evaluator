@@ -24,6 +24,14 @@
 (define (variable? exp) (symbol? exp))
 
 
+;; Sequence
+;; ((exp1) (exp2) ..)
+(define (sequence->exp seq)
+  (cond ((null? seq) seq)
+	((last-exp? seq) (first-exp seq))
+	(else (make-begin seq))))
+
+
 ;; Assignment
 (define (assignment? exp) (tagged-list? exp 'set!))
 
@@ -44,10 +52,10 @@
 
 (define (definition-value exp)
   (if (symbol? (cadr exp))
-      (caddr exp)  ;; Variable definition.
-      (make-lambda ;; Function definition, make it lambda.
-       (cdadr exp) ;; <parameters>
-       (cddr exp))))
+      (caddr exp)    ;; Variable definition.
+      (make-lambda   ;; Function definition, make it lambda.
+       (cdadr exp)   ;; <parameters>
+       (cddr exp)))) ;; <body>
 
 
 ;; Lambda expression
@@ -98,8 +106,18 @@
 (define (cond->if exp)
   (expand-clauses (cond-clauses exp)))
 
-(define (expand-clauses exp)
-  )
+(define (expand-clauses clauses)
+  (if (null? clauses)
+      'false
+      (let ((first (car clauses))
+	    (rest (cdr clauses)))
+	(if (cond-else-clause? first)
+	    (if (null? rest)
+		(sequence->exp (cond-actions first))
+		(error "else clause isn't last -- cond->if" clause))
+	    (make-if (cond-predicate first)
+		     (sequence->exp (cond-actions first))
+		     (expand-clauses rest))))))
 
 
 ;; begin
@@ -114,4 +132,25 @@
 (define (last-exp? exp) (null? (cdr exp)))
 
 (define (make-begin exp) (cons 'begin exp))
+
+
+;; let
+;; TODO
+(define (let? exp) (tagged-list? exp 'let))
+
+
+;; Application
+;; All pairs (none-empty list) are recognized as application.
+(define (application? exp) (pair? exp))
+
+(define (operator exp) (car exp))
+
+(define (operands exp) (cdr exp))
+
+(define (no-operands? exp) (null? exp))
+
+(define (first-operand exp) (car exp))
+
+(define (rest-operands exp) (cdr exp))
+
 
