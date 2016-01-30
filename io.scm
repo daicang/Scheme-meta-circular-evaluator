@@ -25,7 +25,7 @@
   (newline))
 
 (define (user-print obj)
-  (if (my-compound-procedure? obj)
+  (if (compound-procedure? obj)
       (display (list 'compound-procedure
 		     (procedure-parameters obj)
 		     (procedure-body obj)))

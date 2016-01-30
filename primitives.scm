@@ -1,9 +1,11 @@
 ;; primitives.scm
 ;;
-;; Interface:
-;; (primitive-procedure-names)
-;; (primitive-procedure-objects)
 
+
+(define (primitive-procedure? proc)
+  (tagged-list? proc 'primitive))
+
+(define (primitive-implementation proc) (cadr proc))
 
 (define primitive-procedures
   (list (list 'car car)

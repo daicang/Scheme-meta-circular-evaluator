@@ -6,9 +6,10 @@
 ;; - eval/apply function
 ;; - main loop
 
-(load "environment.scm")
+(load "environment.scm") ;; Include "primitives.scm"
 (load "io.scm")
 (load "procedure.scm")
+(load "utils.scm")
 
 
 ;; Initialize environment
@@ -41,8 +42,7 @@
   'ok)
 
 
-;; eval/apply
-
+;; eval
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
 	((variable? exp) (lookup-variable-value exp env))
@@ -61,12 +61,27 @@
 			 env))
 	((begin? exp)
 	 (eval-sequence (begin-actions exp) env))
+
+	;; Must be here. 'application?' (pair?) recognizes any pair.
 	((application? exp)
 	 (apply (eval (operator exp) env)
-		(list-of-values (operands exp) env)))
+		(list-of-values (operands exp) env))) ;; Evaluate arguments.
 	(else
 	 (error "Unknown expression type -- eval: " exp))))
 
+
+;; apply helper functions
+(define (apply-primitive-procedure proc args)
+  (apply-in-underlying-scheme
+   (primitive-implementation proc) args))
+
+(define (list-of-values exps env)
+  (if (no-operands? exps)
+      '()
+      (cons (eval (first-operand exps) env)
+	    (list-of-values (rest-operands exps) env))))
+
+;; apply
 (define (apply procedure arguments)
   (cond ((primitive-procedure? procedure)
 	 (apply-primitive-procedure procedure arguments))
@@ -77,7 +92,7 @@
 	  (procedure-body procedure)
 	  (extend-environment
 	   (procedure-parameters procedure) ;; As variable
-	   arguments                        ;; As value
+	   arguments                        ;; As value,
 	   (procedure-environment procedure))))
 	
 	(else

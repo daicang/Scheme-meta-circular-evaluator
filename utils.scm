@@ -2,9 +2,13 @@
 ;; *INCOMPLETE NOW*
 ;; 
 ;; Handling assignment, definition, lambda
-;; and control structures: if, begin, cond, 
+;; and control structures: if, begin, cond,
+
+;; Require:
+;; environment.scm
 
 
+;; Tagged-list/quote/self-evaluating/variable
 (define (tagged-list? exp tag)
   (if (pair? exp)
       (eq? (car exp) tag)
@@ -15,13 +19,18 @@
 
 (define (text-of-quotation exp) (cadr exp))
 
-
 (define (self-evaluating? exp)
   (cond ((number? exp) #t)
 	((string? exp) #t)
 	(else #f)))
 
 (define (variable? exp) (symbol? exp))
+
+
+;; Ture/false
+(define (true? x) (not (eq? x #f)))
+
+(define (false? x) (eq? x #f))
 
 
 ;; Sequence
@@ -38,6 +47,21 @@
 (define (assignment-variable exp) (cadr exp))
 
 (define (assignment-value exp) (caddr exp))
+
+;; called by eval-assignment
+(define (set-variable-value! var val env)
+  (define (env-loop env)
+    (define (scan vars vals)
+      (cond ((null? vars)
+	     (env-loop (enclosing-environment env)))
+	    ((eq? (car vars) var)
+	     (set-car! vals val))
+	    (else (scan (cdr vars) (cdr vals)))))
+    (if (eq? env the-empty-environment)
+	(error "Unbound variable -- set-variable-value!" var)
+	(let ((f (first-frame env)))
+	  (scan (frame-variables frame) (frame-values frame)))))
+  (env-loop env))
 
 
 ;; Definition
@@ -135,9 +159,28 @@
 
 
 ;; let
-;; TODO
+;; ('let ((<variable1> <value1>) (<variable2> <value2>)) <body>)
 (define (let? exp) (tagged-list? exp 'let))
 
+(define (let-clauses exp) (cadr exp))
+
+(define (let-body exp) (caddr exp))
+
+(define (let-variables clauses)
+  (if (null? clauses)
+      '()
+      (cons (caar clauses)
+	    (let-variables (cdr clauses)))))
+
+;; let handler
+;; Make let a lambda application.
+;; (('lambda <varibales> <body>) <values>)
+(define (let->combination exp)
+  (append (list (list 'lambda (let-variables (let-clauses exp)) (let-body exp)))
+	  (let-exps (let-clauses exp))))
+
+;; let*
+;; TODO
 
 ;; Application
 ;; All pairs (none-empty list) are recognized as application.
