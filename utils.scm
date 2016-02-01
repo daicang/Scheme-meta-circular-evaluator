@@ -180,7 +180,26 @@
 	  (let-exps (let-clauses exp))))
 
 ;; let*
-;; TODO
+;; Transform 'let*' to nested 'let'.
+;; ('let* <clauses> <actions>)
+(define (let*? exp) (tagged-list? exp 'let*))
+
+(define (let*-clauses exp) (cadr exp))
+
+(define (let*-actions exp) (caddr exp))
+
+(define (first-clause clauses) (car clauses))
+
+(define (rest-clauses clauses) (cdr clauses))
+
+(define (let*->nested-lets exp)
+  (define (loop clauses actions)
+    (if (null? clauses)
+	actions
+	(list 'let
+	      (list (first-clause clauses))
+	      (loop (rest-clauses clauses) actions))))
+  (loop (let*-clauses exp) (let-actions exp)))
 
 ;; Application
 ;; All pairs (none-empty list) are recognized as application.

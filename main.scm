@@ -52,9 +52,9 @@
 	((if? exp) (eval-if exp env))
 	((cond? exp) (eval (cond->if exp) env))
 	((let? exp) (eval (let->combination exp) env))
+	((let*? exp) (eval (let*->nested-lets exp) env))
+	;; TODO: letrec
 
-	;; TODO: let* and letrec
-	
 	((lambda? exp)
 	 (make-procedure (lambda-parameters exp)
 			 (lambda-body exp)
