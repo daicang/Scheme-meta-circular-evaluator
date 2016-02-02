@@ -57,7 +57,6 @@
 	((definition? exp) (eval-definition exp env))
 	((if? exp) (eval-if exp env))
 	((cond? exp) (eval (cond->if exp) env))
-	((let? exp) (display (let->combination exp)))
 	((let? exp) (eval (let->combination exp) env))
 	((let*? exp) (eval (let*->nested-lets exp) env))
 	;; TODO: letrec

@@ -19,6 +19,7 @@ TODO
 
 - [x] let*
 - [ ] letrec
+- [ ] Named let
 - [ ] Input from file
 
 
@@ -49,4 +50,4 @@ $ scheme
 ;; Meta-circular-evaluater input:
 
 ```
-Then have fun testing with whatever you want. Note do not load "main.scm" twice, or nested `apply` would cause problems.
+Then have fun testing whatever you want. Note that do not load "main.scm" twice, or nested `apply` would cause problems.
