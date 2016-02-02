@@ -1,9 +1,7 @@
 ;; utils.scm
-;; *INCOMPLETE NOW*
 ;; 
-;; Handling assignment, definition, lambda
-;; and control structures: if, begin, cond,
-
+;; Handling assignment, definition, lambda and control paths.
+;;
 ;; Require:
 ;; environment.scm
 
@@ -42,6 +40,7 @@
 
 
 ;; Assignment
+;; ('set! a b)
 (define (assignment? exp) (tagged-list? exp 'set!))
 
 (define (assignment-variable exp) (cadr exp))
@@ -172,6 +171,12 @@
       (cons (caar clauses)
 	    (let-variables (cdr clauses)))))
 
+(define (let-exps clauses)
+  (if (null? clauses)
+      '()
+      (cons (cadar clauses)
+	    (let-exps (cdr clauses)))))
+
 ;; let handler
 ;; Make let a lambda application.
 ;; (('lambda <varibales> <body>) <values>)
@@ -199,7 +204,7 @@
 	(list 'let
 	      (list (first-clause clauses))
 	      (loop (rest-clauses clauses) actions))))
-  (loop (let*-clauses exp) (let-actions exp)))
+  (loop (let*-clauses exp) (let*-actions exp)))
 
 ;; Application
 ;; All pairs (none-empty list) are recognized as application.

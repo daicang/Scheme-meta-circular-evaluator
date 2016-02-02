@@ -31,6 +31,9 @@
       (cond ((null? vars)
 	     (env-loop (enclosing-environment env)))
 	    ((eq? (car vars) var)
+	     ;; (begin			
+	       ;; (display "found it.")
+	       ;; (car vals)))
 	     (car vals))
 	    (else
 	     (scan (cdr vars) (cdr vals)))))
@@ -38,4 +41,7 @@
 	(error "Unbound variable -- lookup-variable-value: " var)
 	(let ((frame (first-frame env)))
 	  (scan (frame-variables frame) (frame-values frame)))))
+  ;; (newline)
+  ;; (display "lookup-variable-value: ")
+  ;; (user-print var)
   (env-loop env))

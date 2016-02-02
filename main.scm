@@ -44,6 +44,12 @@
 
 ;; eval
 (define (eval exp env)
+  ;; (newline)
+  ;; (display "eval: exp: ")
+  ;; (user-print exp)
+  ;; (newline)
+  ;; (display "env: ")
+  ;; (user-print env)
   (cond ((self-evaluating? exp) exp)
 	((variable? exp) (lookup-variable-value exp env))
 	((quoted? exp) (text-of-quotation exp))
@@ -51,6 +57,7 @@
 	((definition? exp) (eval-definition exp env))
 	((if? exp) (eval-if exp env))
 	((cond? exp) (eval (cond->if exp) env))
+	((let? exp) (display (let->combination exp)))
 	((let? exp) (eval (let->combination exp) env))
 	((let*? exp) (eval (let*->nested-lets exp) env))
 	;; TODO: letrec
@@ -72,6 +79,11 @@
 
 ;; apply helper functions
 (define (apply-primitive-procedure proc args)
+  ;; (newline)
+  ;; (display "apply-primitive-procedure: ")
+  ;; (display proc)
+  ;; (newline)
+  ;; (display args)
   (apply-in-underlying-scheme
    (primitive-implementation proc) args))
 
@@ -92,7 +104,7 @@
 	  (procedure-body procedure)
 	  (extend-environment
 	   (procedure-parameters procedure) ;; As variable
-	   arguments                        ;; As value,
+	   arguments                        ;; As value
 	   (procedure-environment procedure))))
 	
 	(else
@@ -111,4 +123,4 @@
       (user-print output)))
   (driver-loop))
 
-
+(driver-loop)

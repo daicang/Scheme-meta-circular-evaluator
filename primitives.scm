@@ -1,5 +1,6 @@
 ;; primitives.scm
 ;;
+;; ('primitive <primitive-proc> <args>)
 
 
 (define (primitive-procedure? proc)

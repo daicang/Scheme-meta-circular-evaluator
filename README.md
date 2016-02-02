@@ -5,7 +5,7 @@ Scheme meta-circular evaluator
 About
 ------
 
-This is a [Scheme](http://www.schemers.org/) [meta-circular evaluator](https://en.wikipedia.org/wiki/Meta-circular_evaluator) from [SICP](https://mitpress.mit.edu/sicp/) chapter 4, currently under developing.
+This is a [Scheme](http://www.schemers.org/) [meta-circular evaluator](https://en.wikipedia.org/wiki/Meta-circular_evaluator) from [SICP](https://mitpress.mit.edu/sicp/) chapter 4.
 
 
 Features
@@ -17,9 +17,9 @@ Features
 TODO
 -----
 
-- [ ] let*
+- [x] let*
 - [ ] letrec
-
+- [ ] Input from file
 
 
 Quickstart
@@ -49,3 +49,4 @@ $ scheme
 ;; Meta-circular-evaluater input:
 
 ```
+Then have fun testing with whatever you want. Note do not load "main.scm" twice, or nested `apply` would cause problems.
