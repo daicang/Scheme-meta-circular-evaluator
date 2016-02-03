@@ -206,6 +206,28 @@
 	      (loop (rest-clauses clauses) actions))))
   (loop (let*-clauses exp) (let*-actions exp)))
 
+;; letrec
+;; 
+;; ('letrec <clauses> <action>)
+;; ((<variable1> <value1>) (<variable2> <value2>) ...)
+;; 
+;; Transform into:
+;;
+;; ('let ((<varibale1> '*unassigned*) (<variable2> '*unassigned*) ...)
+;;   ('set! <variable1> <value1>)
+;;   ('set! <variable2> <value2>)
+;;   ...
+;;   <action>)
+(define (letrec? exp) (tagged-list? exp 'letrec))
+
+(define (letrec-clauses exp) (cadr exp))
+
+(define (letrec-actions exp) (caddr exp))
+
+(define (letrec->let-and-set exp)
+  (def))
+
+
 ;; Application
 ;; All pairs (none-empty list) are recognized as application.
 (define (application? exp) (pair? exp))

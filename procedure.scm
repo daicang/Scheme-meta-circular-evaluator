@@ -31,10 +31,9 @@
       (cond ((null? vars)
 	     (env-loop (enclosing-environment env)))
 	    ((eq? (car vars) var)
-	     ;; (begin			
-	       ;; (display "found it.")
-	       ;; (car vals)))
-	     (car vals))
+	     (if (eq? (car vals) '*unassigned*)
+		 (error "Variable unassigned --lookup-variable-value")
+		 (car vals)))
 	    (else
 	     (scan (cdr vars) (cdr vals)))))
     (if (eq? env the-empty-environment)
