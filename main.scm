@@ -61,6 +61,7 @@
 	((let*? exp) (eval (let*->nested-lets exp) env))
 	((letrec? exp) (eval (letrec->let-and-set exp) env))
 
+	;; lambda handler.
 	((lambda? exp)
 	 (make-procedure (lambda-parameters exp)
 			 (lambda-body exp)

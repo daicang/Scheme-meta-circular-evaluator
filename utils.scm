@@ -58,7 +58,7 @@
 	    (else (scan (cdr vars) (cdr vals)))))
     (if (eq? env the-empty-environment)
 	(error "Unbound variable -- set-variable-value!" var)
-	(let ((f (first-frame env)))
+	(let ((frame (first-frame env)))
 	  (scan (frame-variables frame) (frame-values frame)))))
   (env-loop env))
 
@@ -150,7 +150,7 @@
 
 (define (first-exp exp) (car exp))
 
-(define (rest-exp exp) (cdr exp))
+(define (rest-exps exp) (cdr exp))
 
 (define (last-exp? exp) (null? (cdr exp)))
 
@@ -208,16 +208,17 @@
 
 ;; letrec
 ;; 
-;; ('letrec <clauses> <action>)
+;; (letrec <clauses> <action>)
 ;; ((<variable1> <value1>) (<variable2> <value2>) ...)
 ;; 
 ;; Transform into:
 ;;
-;; ('let ((<varibale1> '*unassigned*) (<variable2> '*unassigned*) ...)
-;;   ('set! <variable1> <value1>)
-;;   ('set! <variable2> <value2>)
-;;   ...
-;;   <action>)
+;; (let ((<varibale1> '*unassigned*) (<variable2> '*unassigned*) ...)
+;;   (begin
+;;     (set! <variable1> <value1>)
+;;     (set! <variable2> <value2>)
+;;     ...
+;;     <action>))
 (define (letrec? exp) (tagged-list? exp 'letrec))
 
 (define (letrec-clauses exp) (cadr exp))
@@ -225,7 +226,15 @@
 (define (letrec-actions exp) (caddr exp))
 
 (define (letrec->let-and-set exp)
-  (def))
+  (let ((let-part
+	 (list 'let
+	       (map (lambda (x) (list (car x) ''*unassigned*))
+		    (letrec-clauses exp))))
+	(begin-part
+	 (cons 'begin
+	       (append (map (lambda (x) (cons 'set! x))
+		    (letrec-clauses exp)) (letrec-actions exp)))))
+    (append let-part (list begin-part))))
 
 
 ;; Application
