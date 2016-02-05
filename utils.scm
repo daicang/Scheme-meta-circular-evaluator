@@ -41,7 +41,7 @@
 
 
 ;; Assignment
-;; ('set! a b)
+;; (set! a b)
 (define (assignment? exp) (tagged-list? exp 'set!))
 
 (define (assignment-variable exp) (cadr exp))
@@ -67,8 +67,8 @@
 ;; Definition
 (define (definition? exp) (tagged-list? exp 'define))
 
-;; ('define <variable> <body>)
-;; or ('define (<variable> <parameters>) <body>)
+;; (define <variable> <body>)
+;; or (define (<variable> <parameters>) <body>)
 (define (definition-variable exp)
   (if (symbol? (cadr exp))
       (cadr exp)
@@ -83,7 +83,7 @@
 
 
 ;; Lambda expression
-;; ('lambda (<parameters>) <body>)
+;; (lambda (<parameters>) <body>)
 (define (lambda? exp) (tagged-list? exp 'lambda))
 
 (define (lambda-parameters exp) (cadr exp))
@@ -116,7 +116,7 @@
 ;; cond
 ;; (cond ((<predicate1>) <action1>)
 ;;       ((<predicate2>) <action2>)
-;;       ('else <action-else>))
+;;       (else <action-else>))
 (define (cond? exp) (tagged-list? exp 'cond))
 
 (define (cond-clauses exp) (cdr exp))
@@ -159,7 +159,7 @@
 
 
 ;; let
-;; ('let ((<variable1> <value1>) (<variable2> <value2>)) <body>)
+;; (let ((<variable1> <value1>) (<variable2> <value2>)) <body>)
 (define (let? exp) (tagged-list? exp 'let))
 
 (define (let-clauses exp) (cadr exp))
@@ -180,14 +180,21 @@
 
 ;; let handler
 ;; Make let a lambda application.
-;; (('lambda <varibales> <body>) <values>)
+;; ((lambda <varibales> <body>) <values>)
 (define (let->combination exp)
   (append (list (list 'lambda (let-variables (let-clauses exp)) (let-body exp)))
 	  (let-exps (let-clauses exp))))
 
 ;; let*
-;; Transform 'let*' to nested 'let'.
-;; ('let* <clauses> <actions>)
+;;
+;; (let* ((<variable1> <value1>) (<variable2> <value2>) ...) <actions>)
+;;
+;; Transform into:
+;;
+;; (let ((<variable1> <value1>))
+;;   (let ((<variable2> <value2>)))
+;;     ...
+;;     <actions>)
 (define (let*? exp) (tagged-list? exp 'let*))
 
 (define (let*-clauses exp) (cadr exp))
@@ -209,7 +216,7 @@
 
 ;; letrec
 ;; 
-;; (letrec <clauses> <action>)
+;; (letrec <clauses> <actions>)
 ;; ((<variable1> <value1>) (<variable2> <value2>) ...)
 ;; 
 ;; Transform into:
@@ -219,7 +226,7 @@
 ;;     (set! <variable1> <value1>)
 ;;     (set! <variable2> <value2>)
 ;;     ...
-;;     <action>))
+;;     <actions>))
 (define (letrec? exp) (tagged-list? exp 'letrec))
 
 (define (letrec-clauses exp) (cadr exp))
@@ -234,7 +241,7 @@
 	(begin-part
 	 (cons 'begin
 	       (append (map (lambda (x) (cons 'set! x))
-		    (letrec-clauses exp)) (letrec-actions exp)))))
+		    (letrec-clauses exp)) (list(letrec-actions exp))))))
     (append let-part (list begin-part))))
 
 
@@ -251,5 +258,3 @@
 (define (first-operand exp) (car exp))
 
 (define (rest-operands exp) (cdr exp))
-
-

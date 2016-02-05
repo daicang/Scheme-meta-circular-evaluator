@@ -12,13 +12,41 @@ Features
 -----
 
 - Support [lexical binding](http://www.gnu.org/software/mit-scheme/documentation/mit-scheme-ref/Lexical-Binding.html).
+- Support let*/letrec:
+```
+(load "main.scm")
+
+;Loading "main.scm"...
+;  Loading "environment.scm"...
+;    Loading "primitives.scm"... done
+;  ... done
+;  Loading "io.scm"... done
+;  Loading "procedure.scm"... done
+;  Loading "utils.scm"... done
+
+;; Meta-circular-evaluater input:
+(define (f x) (letrec ((even? (lambda (n) (if (= n 0) #t (odd? (- n 1))))) (odd? (lambda (n) (if (= n 0) #f (even? (- n 1)))))) (even? x)))
+
+;; Result:
+ok
+;; Meta-circular-evaluater input:
+(f 5)
+
+;; Result:
+#f
+;; Meta-circular-evaluater input:
+(f 1022)
+```
+
+;; Result:
+#t
 
 
 TODO
 -----
 
 - [x] let*
-- [ ] letrec
+- [x] letrec
 - [ ] Named let
 - [ ] Input from file
 
