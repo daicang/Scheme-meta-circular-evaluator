@@ -20,6 +20,7 @@
 (define (self-evaluating? exp)
   (cond ((number? exp) #t)
 	((string? exp) #t)
+	((or (eq? exp #t) (eq? exp #f)) #t)
 	(else #f)))
 
 (define (variable? exp) (symbol? exp))
