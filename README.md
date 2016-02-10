@@ -44,7 +44,7 @@ TODO
 - [x] let*
 - [x] letrec
 - [ ] Named let
-- [ ] Input from file
+- [x] Input from file
 
 
 Features

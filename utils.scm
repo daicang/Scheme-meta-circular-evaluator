@@ -258,3 +258,9 @@
 (define (first-operand exp) (car exp))
 
 (define (rest-operands exp) (cdr exp))
+
+
+;; Input from file
+(define (load? exp) (tagged-list? exp 'load))
+
+(define (load-file exp) (cadr exp))

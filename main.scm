@@ -41,16 +41,25 @@
 		    env)
   'ok)
 
+(define (eval-load exp env)
+  (let ((f (open-input-file (load-file exp))))
+    (define (read-loop)
+      (let ((x (read f)))
+	(if (eof-object? x)
+	    (begin
+	      (close-input-port f)
+	      'done)
+	    (begin
+	      (announce-output output-prompt)
+	      (user-print (eval x env))
+	      (read-loop)))))
+    (read-loop)))
+
 
 ;; eval
 (define (eval exp env)
-  ;; (newline)
-  ;; (display "eval: exp: ")
-  ;; (user-print exp)
-  ;; (newline)
-  ;; (display "env: ")
-  ;; (user-print env)
-  (cond ((self-evaluating? exp) exp)
+  (cond ((load? exp) (eval-load exp env))
+	((self-evaluating? exp) exp)
 	((variable? exp) (lookup-variable-value exp env))
 	((quoted? exp) (text-of-quotation exp))
 	((assignment? exp) (eval-assignment exp env))
@@ -79,11 +88,6 @@
 
 ;; apply helper functions
 (define (apply-primitive-procedure proc args)
-  ;; (newline)
-  ;; (display "apply-primitive-procedure: ")
-  ;; (display proc)
-  ;; (newline)
-  ;; (display args)
   (apply-in-underlying-scheme
    (primitive-implementation proc) args))
 
