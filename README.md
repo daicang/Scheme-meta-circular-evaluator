@@ -11,10 +11,10 @@ This is a [Scheme](http://www.schemers.org/) [meta-circular evaluator](https://e
 Quickstart
 -----
 
-## Environment
+### Environment
 I use [mit-scheme](https://www.gnu.org/software/mit-scheme/) 9.2 on OSX.
 
-## Interactive mode
+### Interactive mode
 The default interface is an interactive loop, try this:
 ```
 $ scheme
@@ -35,7 +35,7 @@ $ scheme
 ```
 Then have fun testing whatever you want. Note that do not load "main.scm" twice, or nested `apply` would cause problems.
 
-## Input from file
+### Input from file
 Load "main.scm" in scheme shell, then load file like this:
 ```
 ;; Meta-circular-evaluater input:
