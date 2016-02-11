@@ -4,13 +4,11 @@ Scheme meta-circular evaluator
 
 About
 ------
-
-This is a [Scheme](http://www.schemers.org/) [meta-circular evaluator](https://en.wikipedia.org/wiki/Meta-circular_evaluator) from [SICP](https://mitpress.mit.edu/sicp/) chapter 4.
+A [Scheme](http://www.schemers.org/) [meta-circular evaluator](https://en.wikipedia.org/wiki/Meta-circular_evaluator) from [SICP](https://mitpress.mit.edu/sicp/) chapter 4.
 
 
 Quickstart
 -----
-
 ### Environment
 I use [MIT/GNU-Scheme](https://www.gnu.org/software/mit-scheme/) 9.2 on OS X 10.11.
 
@@ -45,7 +43,6 @@ Load "main.scm" in scheme shell, then load file like this:
 
 Features
 -----
-
 - Support [lexical binding](http://www.gnu.org/software/mit-scheme/documentation/mit-scheme-ref/Lexical-Binding.html).
 - Support let*/letrec/named-let
 
@@ -70,7 +67,6 @@ ok
 
 TODO
 -----
-
 - [x] let*
 - [x] letrec
 - [x] Named let
