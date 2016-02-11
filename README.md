@@ -12,7 +12,7 @@ Quickstart
 -----
 
 ### Environment
-I use [mit-scheme](https://www.gnu.org/software/mit-scheme/) 9.2 on OSX.
+I use [MIT/GNU-Scheme](https://www.gnu.org/software/mit-scheme/) 9.2 on OS X 10.11.
 
 ### Interactive mode
 The default interface is an interactive loop, try this:
