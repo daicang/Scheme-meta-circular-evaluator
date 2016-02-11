@@ -160,11 +160,13 @@
 
 ;; let
 ;; (let ((<variable1> <value1>) (<variable2> <value2>)) <body>)
+;; Note that <body> should be one single expression,
+;; use 'begin' if you have multiple expressions.
 (define (let? exp) (tagged-list? exp 'let))
 
 (define (let-clauses exp) (cadr exp))
 
-(define (let-body exp) (caddr exp))
+(define (let-body exp) (caddr exp)) ;; Single expression
 
 (define (let-variables clauses)
   (if (null? clauses)
@@ -184,6 +186,37 @@
 (define (let->combination exp)
   (append (list (list 'lambda (let-variables (let-clauses exp)) (let-body exp)))
 	  (let-exps (let-clauses exp))))
+
+;; Named let
+;;
+;; (let <name> ((<variable1> <value1>) ...) <body>)
+;;
+;; Transform into:
+;; (define (<name> <variables>) <body>)(<name> <values>)
+(define (named-let? exp) (and (let? exp) (symbol? (cadr exp))))
+
+(define (named-let-name exp) (cadr exp))
+
+(define (named-let-clauses exp) (caddr exp))
+
+(define (named-let-variables exp)
+  (map (lambda (x) (car x)) (named-let-clauses exp)))
+
+(define (named-let-values exp)
+  (map (lambda (x) (cadr x)) (named-let-clauses exp)))
+
+(define (named-let-body exp) (cadddr exp))
+
+(define (named-let->combination exp)
+  (let ((define-part
+	  (cons 'define
+		(list (cons (named-let-name exp)
+			    (named-let-variables exp))
+		      (named-let-body exp))))
+	(application-part
+	 (cons (named-let-name exp)
+	       (named-let-values exp))))
+    (make-begin (list define-part application-part))))
 
 ;; let*
 ;;

@@ -43,7 +43,7 @@ TODO
 
 - [x] let*
 - [x] letrec
-- [ ] Named let
+- [x] Named let
 - [x] Input from file
 
 
