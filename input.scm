@@ -23,9 +23,9 @@
 		  (even? (- n 1))))))
     (even? x)))
 
-(display "Test letrec")
-(f 5)
-(f 1024)
+;; (display "Test letrec")
+;; (f 5)
+;; (f 1024)
 
 ;; named-let
 (define (fib n)
@@ -52,13 +52,18 @@
 (factorial 4)
 (factorial 5)
 
-((lambda (f n)
-  (if (= n 0)
-      1
-      (* n (f f (- n 1)))))
- '(lambda (f n)
-   (if (= n 0)
-       1
-       (* n (f f (- n 1)))))
- 5)
+;; Lambda calculus test, will not pass
+;; ((lambda (f n)
+;;   (if (= n 0)
+;;       1
+;;       (* n (f f (- n 1)))))
+;;  '(lambda (f n)
+;;    (if (= n 0)
+;;        1
+;;        (* n (f f (- n 1)))))
+;;  5)
     
+
+;; Omega combinator
+;; Loop forever (watch CPU usage!)
+;; ((lambda (x) (x x)) (lambda (x) (x x)))

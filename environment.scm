@@ -63,6 +63,6 @@
   (let ((initial-env (extend-environment (primitive-procedure-names)
 					 (primitive-procedure-objects)
 					 the-empty-environment)))
-    (define-variable! 'true true initial-env)
-    (define-variable! 'false false initial-env)
+    (define-variable! 'true #t initial-env)
+    (define-variable! 'false #f initial-env)
     initial-env))
